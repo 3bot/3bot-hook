@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
+from django import dispatch
+from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django import dispatch
-from django.contrib.sites.models import Site
 
 from rest_framework.authtoken.models import Token
 
@@ -15,8 +16,12 @@ from threebot.models import ParameterList
 class Hook(models.Model):
     slug = models.SlugField(max_length=255)
     user = models.CharField(max_length=255, blank=True, null=True)
-    repo = models.CharField(max_length=255, blank=True, null=True, help_text=u'Leave blank. Field is not used in the current version.')
-    secret = models.CharField(max_length=255, blank=True, null=True, help_text=u'Leave blank. Field is not used in the current version.')
+    repo = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text=u'Leave blank. Field is not used in the current version.')
+    secret = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text=u'Leave blank. Field is not used in the current version.')
     workflow = models.ForeignKey(Workflow)
     worker = models.ForeignKey(Worker)
     param_list = models.ForeignKey(ParameterList)
