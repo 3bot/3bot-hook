@@ -5,7 +5,6 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.template import RequestContext
 
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
