@@ -1,36 +1,32 @@
+# -*- coding: utf-8 -*-
 import logging
-
 import json
 
-from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.template import RequestContext
+
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.exceptions import ParseError
 from rest_framework.authtoken.models import Token
-
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
-
-from .models import Hook, pre_hook_signal, post_hook_signal
-from .forms import HookCreateForm, HookEditForm
-
-from threebot.utils import order_workflow_tasks
-
-from threebot.models import Worker
 from threebot.models import Parameter
 from threebot.models import ParameterList
+from threebot.models import Worker
 from threebot.models import Workflow
 from threebot.models import WorkflowLog
 from threebot.models import WorkflowPreset
 from threebot.tasks import run_workflow
 from threebot.utils import get_my_orgs
+from threebot.utils import order_workflow_tasks
+
+from threebot_hook.models import Hook, pre_hook_signal, post_hook_signal
+from threebot_hook.forms import HookCreateForm, HookEditForm
+
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logging.basicConfig()
 
 
 class HookView(GenericAPIView):
@@ -120,10 +116,10 @@ def hooks_list(request, wf_slug, template='threebot_hook/list.html'):
     for hook in hooks:
         hook.full_url = hook.make_full_url(request.user)
 
-    return render_to_response(template, {'request': request,
-                                         'workflow': workflow,
-                                         'hooks': hooks,
-                                        }, context_instance=RequestContext(request))
+    return render(request, template, {'request': request,
+                                      'workflow': workflow,
+                                      'hooks': hooks,
+                                     })
 
 
 @login_required
@@ -137,10 +133,10 @@ def create(request, wf_slug, template='threebot_hook/create.html'):
 
         return redirect('hook_list', workflow.slug)
 
-    return render_to_response(template, {'request': request,
-                                         'form': form,
-                                         'workflow': workflow,
-                                        }, context_instance=RequestContext(request))
+    return render(request, template, {'request': request,
+                                      'form': form,
+                                      'workflow': workflow,
+                                     })
 
 
 @login_required
@@ -156,7 +152,7 @@ def edit(request, wf_slug, hook_slug, template='threebot_hook/create.html'):
 
         return redirect('hook_list', workflow.slug)
 
-    return render_to_response(template, {'request': request,
-                                         'form': form,
-                                         'workflow': workflow,
-                                        }, context_instance=RequestContext(request))
+    return render(request, template, {'request': request,
+                                      'form': form,
+                                      'workflow': workflow,
+                                     })
