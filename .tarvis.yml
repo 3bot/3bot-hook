@@ -24,7 +24,5 @@ install:
 script:
     - tox -e $TOX_ENV
 
-sudo: false
-
 after_success:
     coveralls
