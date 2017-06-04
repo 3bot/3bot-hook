@@ -1,5 +1,10 @@
 # 3bot-hook
 
+[![Build Status](https://travis-ci.org/3bot/3bot-hook.svg?branch=master)](https://travis-ci.org/3bot/3bot-hook)
+[![Coverage Status](https://coveralls.io/repos/3bot/3bot-hook/badge.svg?branch=master&service=github)](https://coveralls.io/github/3bot/3bot-hook?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/threebot-hook.svg)](https://pypi.python.org/pypi/threebot-hook)
+
+
 Webhook handler for 3bot workflow execution. Basically for Github and Bitbucket but works with other POST requests as well.
 
 
