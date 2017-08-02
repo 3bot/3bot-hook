@@ -1,2 +1,2 @@
 djangorestframework>=3.5.3
-threebot
+threebot>=0.1.1
