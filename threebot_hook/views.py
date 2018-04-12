@@ -20,6 +20,7 @@ from threebot.models import WorkflowPreset
 from threebot.tasks import run_workflow
 from threebot.utils import get_my_orgs
 from threebot.utils import order_workflow_tasks
+from threebot.utils import send_failiure_notification
 
 from threebot_hook.models import Hook, pre_hook_signal, post_hook_signal
 from threebot_hook.forms import HookCreateForm, HookEditForm
@@ -96,11 +97,17 @@ class HookView(GenericAPIView):
         workflow_log.inputs['payload'] = payload
         workflow_log.save()
 
-        run_workflow(workflow_log.id)
-        resp = {'workflow_log_exit_code': workflow_log.exit_code,
+        if workflow_log.performed_on.is_accessible:
+            run_workflow(workflow_log.id)
+        else:
+            workflow_log.exit_code = workflow_log.ERROR
+            workflow_log.save()
+            send_failiure_notification(workflow_log)
 
-                'workflow_log_id': workflow_log.id,
-                }
+        resp = {
+            'workflow_log_exit_code': workflow_log.exit_code,
+            'workflow_log_id': workflow_log.id,
+        }
 
         post_hook_signal.send(HookView, request=request, payload=payload, resp=resp)
         return Response(resp)
